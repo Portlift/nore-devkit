@@ -1,0 +1,32 @@
+{
+  "name": "nore-devkit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Nore evaluation CLI, reference agent adapters, and CI examples",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "bin": {
+    "nore": "./bin/nore.mjs"
+  },
+  "files": [
+    "bin",
+    "adapters",
+    "docs",
+    "examples",
+    "scripts"
+  ],
+  "scripts": {
+    "nore": "node bin/nore.mjs",
+    "adapter:http": "node adapters/http.mjs",
+    "adapter:mcp": "node adapters/mcp.mjs",
+    "test": "node --test",
+    "demo": "node scripts/sample-ci.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "zod": "4.6.7"
+  }
+}

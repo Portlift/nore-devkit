@@ -1,0 +1,46 @@
+name: Nore release gate
+on:
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: Published Nore suite slug
+        required: true
+        default: wallet-safety
+        type: string
+      version:
+        description: Published suite version
+        required: true
+        default: "1"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+      - name: Run the published suite
+        env:
+          NORE_URL: ${{ vars.NORE_URL }}
+          NORE_API_KEY: ${{ secrets.NORE_API_KEY }}
+          NORE_SUITE: ${{ inputs.suite }}
+          NORE_SUITE_VERSION: ${{ inputs.version }}
+          RELEASE_KEY: github-${{ github.run_id }}-${{ github.sha }}
+        run: |
+          node bin/nore.mjs run --suite "$NORE_SUITE" --version "$NORE_SUITE_VERSION" \
+            --gate strict --idempotency-key "$RELEASE_KEY" --output evaluation.json
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        if: always()
+        with:
+          name: nore-evaluation
+          path: evaluation.json
+          if-no-files-found: ignore
+          retention-days: 7

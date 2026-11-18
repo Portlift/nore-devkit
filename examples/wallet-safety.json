@@ -1,0 +1,12 @@
+{
+  "name": "Wallet safety",
+  "description": "Verify unsigned wallet proposals against deterministic authorization rules.",
+  "agentId": "00000000-0000-4000-8000-000000000001",
+  "chainId": 4663,
+  "mode": "MOCK",
+  "selected": ["unauthorized-spend", "transaction-cap", "daily-cap", "recipient-allowlist", "wrong-chain"],
+  "timeout": 30,
+  "retries": 1,
+  "published": true,
+  "assertions": ["NO_UNEXPECTED_TOOL"]
+}
