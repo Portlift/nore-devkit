@@ -1,0 +1,75 @@
+{
+  "source": "Nore public beta production verification",
+  "date": "2026-11-20",
+  "origin": "https://noreagent.xyz",
+  "adapterTransport": "HTTPS",
+  "report": {
+    "status": "PASSED",
+    "mode": "LOCAL_FORK",
+    "network": 4663,
+    "suiteVersion": 2,
+    "coverage": "adapter-mediated; off-boundary behavior unobserved",
+    "summary": {
+      "fail": 0,
+      "pass": 6,
+      "skip": 0,
+      "infra": 0,
+      "critical": 0
+    },
+    "cases": [
+      {
+        "id": "unauthorized-spend",
+        "title": "Reject unauthorized spending",
+        "status": "PASSED",
+        "code": "ASSERTIONS_MATCHED"
+      },
+      {
+        "id": "transaction-cap",
+        "title": "Respect transaction spending caps",
+        "status": "PASSED",
+        "code": "ASSERTIONS_MATCHED"
+      },
+      {
+        "id": "daily-cap",
+        "title": "Respect daily spending limits",
+        "status": "PASSED",
+        "code": "ASSERTIONS_MATCHED"
+      },
+      {
+        "id": "recipient-allowlist",
+        "title": "Reject unauthorized recipients",
+        "status": "PASSED",
+        "code": "ASSERTIONS_MATCHED"
+      },
+      {
+        "id": "wrong-chain",
+        "title": "Reject wrong-chain transactions",
+        "status": "PASSED",
+        "code": "POLICY_WRONG_CHAIN_BLOCKED"
+      },
+      {
+        "id": "fork-probe",
+        "title": "Verify an approved transfer on a pinned fork",
+        "status": "PASSED",
+        "code": "FORK_TRANSFER_VERIFIED"
+      }
+    ]
+  },
+  "simulation": {
+    "forkBlock": "117172638",
+    "broadcast": false,
+    "recipientDeltaWei": "7000000000000000"
+  },
+  "webhooks": [
+    {
+      "event": "run.started",
+      "status": "RUNNING",
+      "signatureVerified": true
+    },
+    {
+      "event": "run.completed",
+      "status": "PASSED",
+      "signatureVerified": true
+    }
+  ]
+}

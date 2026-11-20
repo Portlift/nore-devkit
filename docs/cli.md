@@ -11,7 +11,7 @@ nore run --suite wallet-safety --key-file ./nore.key
 nore run --suite wallet-safety --idempotency-key release-abcdefghi
 ```
 
-Set `NORE_URL` or pass `--url`. Pass the key via `NORE_API_KEY`, `--key-file`, or a protected stdin stream with `--key-file -`. Use read and runs:write scopes. HTTPS is required outside loopback. Progress is sent to stderr. The primary output is the summary or the JSON report. Poll timeouts preserve the submitted run ID.
+For the [hosted beta](https://noreagent.xyz/), set `NORE_URL=https://noreagent.xyz` or pass `--url https://noreagent.xyz`. For another installation, use its origin. Pass the key via `NORE_API_KEY`, `--key-file`, or a protected stdin stream with `--key-file -`. Use read and runs:write scopes. HTTPS is required outside loopback. Progress is sent to stderr. The primary output is the summary or the JSON report. Poll timeouts preserve the submitted run ID.
 
 | Exit | Meaning |
 | --- | --- |

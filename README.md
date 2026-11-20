@@ -2,6 +2,8 @@
 
 Connect an agent to Nore, run a versioned evaluation suite in CI, and keep the JSON report with your release. This kit includes the CLI, reference adapters for HTTP and MCP, and examples for local and hosted runs.
 
+[Open Nore’s public beta](https://noreagent.xyz/) · [Read the docs](https://noreagent.xyz/docs)
+
 ## Run the sample CI job
 
 Use Node.js 24 or later. From this checkout, run:
@@ -23,19 +25,31 @@ The demo passes when both outcomes match and both reports are saved. The fixture
 
 The [sample workflow](.github/workflows/sample-ci.yml) runs the same install, tests, and demo in GitHub Actions and uploads both reports. It needs no Nore workspace, credentials, wallet, or chain RPC.
 
-## Run a suite on Nore
+## Run a suite on the hosted beta
 
-1. In a Nore workspace, register an agent, associate a policy as appropriate, and publish a suite. [Wallet safety](examples/wallet-safety.json) is an example suite definition. Substitute your own agent ID before using it with the API.
-2. Create a workspace API key with `read` and `runs:write` scopes. Use your secret manager to set `NORE_API_KEY` and set `NORE_URL` to your Nore HTTPS origin. The CLI also accepts loopback HTTP for local development.
-3. Use the suite slug and version from your workspace.
+To try Nore with a built-in test agent, connect a wallet in the [workspace](https://noreagent.xyz/app) and select **Start sandbox**. Choose **Open Failure Recovery**, run the suite, and open its report.
+
+To run your own agent, get its exact HTTPS origin approved by the Nore operator before registering the endpoint. An external webhook receiver needs origin approval too. See the [hosted adapter guide](https://noreagent.xyz/docs#connect-agent).
+
+1. Open the [workspace](https://noreagent.xyz/app), connect your wallet, and sign the sign-in message to open your personal workspace.
+2. Under **Agents → Register agent**, select HTTP or MCP and enter the approved endpoint and its bearer credential, if required. For MCP, discover and approve a compatible step tool on the agent version.
+3. Under **Test suites → New test suite**, select your agent, network, and cases. Save and publish the suite, then note its slug and published version. The [wallet safety definition](examples/wallet-safety.json) shows an example to adapt to your own agent.
+4. In **API keys**, create a workspace key with `read` and `runs:write`. Store it as `NORE_API_KEY` in your local secret manager or CI secret store.
+5. Run the CLI from this checkout with Node.js 24 or later. Replace `wallet-safety` and `1` with your suite slug and published version.
 
 ```sh
+npm ci
+export NORE_URL=https://noreagent.xyz
 npm run nore -- run --suite wallet-safety --version 1 --gate strict --output evaluation.json
 ```
 
-The CLI submits the suite, polls until it finishes, and saves the report. A failure still produces a report when the API has one. See the [CLI reference](docs/cli.md) for exit codes and the [OpenAPI snapshot](docs/openapi.json) for API fields.
+The CLI submits the suite, polls for a terminal result, and saves the JSON report. A failed gate still produces a report when the API has one. For another Nore installation, set `NORE_URL` to its HTTPS origin. Loopback HTTP is supported for local development. See the [CLI reference](docs/cli.md) for exit codes and the [OpenAPI snapshot](docs/openapi.json) for API fields.
 
-To make that suite a release gate, copy [the release workflow](examples/nore-release-gate.yml) into `.github/workflows/` in a checkout containing `bin/nore.mjs`. In GitHub, set the `NORE_URL` repository variable and `NORE_API_KEY` Actions secret. Open **Actions → Nore release gate → Run workflow** and enter the published suite and version. The report uploads even when the strict gate fails.
+To run the gate in GitHub Actions, copy [the release workflow](examples/nore-release-gate.yml) into `.github/workflows/` in a checkout containing `bin/nore.mjs`. Set the `NORE_URL` repository variable to `https://noreagent.xyz` and add the `NORE_API_KEY` Actions secret. Open **Actions → Nore release gate → Run workflow** and enter the published suite and version. The report uploads even when the strict gate fails.
+
+## Production evaluation
+
+On November 20, 2026, all six cases passed through a hosted HTTPS adapter from the Nore public beta. Nore blocked a wrong-chain proposal and verified an approved transfer on a Robinhood Chain mainnet fork at block `117172638`. The webhook receiver verified the signatures on `run.started` and `run.completed` for the run. [Sanitized production results](examples/robinhood-production-beta-summary.json)
 
 ## Connect an adapter
 
